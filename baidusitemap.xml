@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+    
+    
+  <url>
+    <loc>https://www.seventech.top/2018/07/26/back-propagation-2/</loc>
+    <lastmod>2018-07-26T12:38:27.715Z</lastmod>
+    <data>
+        <display>
+        <title>反向传播（二）</title>
+        <pubTime>2018-07-26T02:27:02.000Z</pubTime>
+        
+        <tag>CNN</tag>
+         
+         
+           
+             
+              <breadCrumb title="AI" url="https://www.seventech.top/categories/AI/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://www.seventech.top/2018/07/20/back-propagation-1/</loc>
+    <lastmod>2018-07-26T10:31:53.092Z</lastmod>
+    <data>
+        <display>
+        <title>反向传播（一）</title>
+        <pubTime>2018-07-20T03:57:34.000Z</pubTime>
+        
+        <tag>CNN</tag>
+         
+         
+           
+             
+              <breadCrumb title="AI" url="https://www.seventech.top/categories/AI/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://www.seventech.top/2018/07/20/forward-propagation/</loc>
+    <lastmod>2018-07-23T12:22:02.888Z</lastmod>
+    <data>
+        <display>
+        <title>前向传播</title>
+        <pubTime>2018-07-20T02:33:45.000Z</pubTime>
+        
+        <tag>CNN</tag>
+         
+         
+           
+             
+              <breadCrumb title="AI" url="https://www.seventech.top/categories/AI/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://www.seventech.top/2018/07/12/cnn-dimension/</loc>
+    <lastmod>2018-07-22T15:48:10.552Z</lastmod>
+    <data>
+        <display>
+        <title>卷积神经网络中的维度</title>
+        <pubTime>2018-07-12T02:46:32.000Z</pubTime>
+        
+        <tag>CNN</tag>
+         
+         
+           
+             
+              <breadCrumb title="AI" url="https://www.seventech.top/categories/AI/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://www.seventech.top/2018/07/18/CS231n-notes/</loc>
+    <lastmod>2018-07-18T04:09:15.930Z</lastmod>
+    <data>
+        <display>
+        <title>CS231n课程中文笔记汇总</title>
+        <pubTime>2018-07-18T03:10:26.000Z</pubTime>
+        
+        <tag>CNN</tag>
+         
+         
+           
+             
+              <breadCrumb title="AI" url="https://www.seventech.top/categories/AI/"/>
+          
+        </display>
+    </data>
+    </url>
+
+</urlset>
