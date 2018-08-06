@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.seventech.top/tags/index.html</loc>
+    
+    <lastmod>2018-08-06T14:29:57.900Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.seventech.top/categories/index.html</loc>
+    
+    <lastmod>2018-08-06T14:29:41.103Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.seventech.top/2018/07/12/cnn-dimension/</loc>
+    
+    <lastmod>2018-08-06T14:25:19.167Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.seventech.top/2018/07/26/back-propagation-2/</loc>
     
     <lastmod>2018-07-29T05:54:20.759Z</lastmod>
@@ -16,13 +37,6 @@
   </url>
   
   <url>
-    <loc>https://www.seventech.top/2018/07/12/cnn-dimension/</loc>
-    
-    <lastmod>2018-07-27T11:42:27.152Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.seventech.top/2018/07/20/forward-propagation/</loc>
     
     <lastmod>2018-07-27T11:41:50.054Z</lastmod>
@@ -33,20 +47,6 @@
     <loc>https://www.seventech.top/2018/07/20/back-propagation-1/</loc>
     
     <lastmod>2018-07-27T11:41:26.423Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.seventech.top/tags/index.html</loc>
-    
-    <lastmod>2018-07-27T08:29:37.696Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.seventech.top/categories/index.html</loc>
-    
-    <lastmod>2018-07-27T08:29:28.325Z</lastmod>
     
   </url>
   

@@ -3,6 +3,28 @@
 
 
     
+    
+    
+  <url>
+    <loc>https://www.seventech.top/2018/07/12/cnn-dimension/</loc>
+    <lastmod>2018-08-06T14:25:19.167Z</lastmod>
+    <data>
+        <display>
+        <title>卷积神经网络中的维度</title>
+        <pubTime>2018-07-12T02:46:32.000Z</pubTime>
+        
+        <tag>CNN</tag>
+         
+         
+           
+             
+              <breadCrumb title="AI" url="https://www.seventech.top/categories/AI/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>https://www.seventech.top/2018/07/26/back-propagation-2/</loc>
     <lastmod>2018-07-29T05:54:20.759Z</lastmod>
@@ -30,26 +52,6 @@
         <display>
         <title>CS231n课程中文笔记汇总</title>
         <pubTime>2018-07-18T03:10:26.000Z</pubTime>
-        
-        <tag>CNN</tag>
-         
-         
-           
-             
-              <breadCrumb title="AI" url="https://www.seventech.top/categories/AI/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://www.seventech.top/2018/07/12/cnn-dimension/</loc>
-    <lastmod>2018-07-27T11:42:27.152Z</lastmod>
-    <data>
-        <display>
-        <title>卷积神经网络中的维度</title>
-        <pubTime>2018-07-12T02:46:32.000Z</pubTime>
         
         <tag>CNN</tag>
          
@@ -102,6 +104,4 @@
     </data>
     </url>
 
-    
-    
 </urlset>
