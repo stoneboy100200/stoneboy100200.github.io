@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.seventech.top/2018/06/08/numpy-100/</loc>
+    
+    <lastmod>2018-09-22T14:36:49.254Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.seventech.top/tags/index.html</loc>
     
     <lastmod>2018-09-22T14:17:10.532Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://www.seventech.top/categories/index.html</loc>
     
     <lastmod>2018-09-22T14:16:59.379Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.seventech.top/2018/06/08/numpy-100/</loc>
-    
-    <lastmod>2018-09-22T14:16:43.209Z</lastmod>
     
   </url>
   
