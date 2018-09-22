@@ -2,65 +2,65 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.seventech.top/2018/08/09/numpy-sum/</loc>
-    
-    <lastmod>2018-08-09T09:10:03.734Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.seventech.top/2018/08/08/numpy-100/</loc>
-    
-    <lastmod>2018-08-08T02:38:17.060Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.seventech.top/tags/index.html</loc>
     
-    <lastmod>2018-08-06T14:29:57.900Z</lastmod>
+    <lastmod>2018-09-22T14:17:10.532Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.seventech.top/categories/index.html</loc>
     
-    <lastmod>2018-08-06T14:29:41.103Z</lastmod>
+    <lastmod>2018-09-22T14:16:59.379Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://www.seventech.top/2018/07/12/cnn-dimension/</loc>
+    <loc>https://www.seventech.top/2018/06/08/numpy-100/</loc>
     
-    <lastmod>2018-08-06T14:25:19.167Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.seventech.top/2018/07/26/back-propagation-2/</loc>
-    
-    <lastmod>2018-07-29T05:54:20.759Z</lastmod>
+    <lastmod>2018-09-22T14:16:43.209Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://www.seventech.top/2018/07/18/CS231n-notes/</loc>
+    <loc>https://www.seventech.top/2018/03/20/forward-propagation/</loc>
     
-    <lastmod>2018-07-27T11:42:49.698Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.seventech.top/2018/07/20/forward-propagation/</loc>
-    
-    <lastmod>2018-07-27T11:41:50.054Z</lastmod>
+    <lastmod>2018-09-22T14:16:33.684Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://www.seventech.top/2018/07/20/back-propagation-1/</loc>
+    <loc>https://www.seventech.top/2018/02/18/CS231n-notes/</loc>
     
-    <lastmod>2018-07-27T11:41:26.423Z</lastmod>
+    <lastmod>2018-09-22T14:16:20.860Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.seventech.top/2018/01/12/cnn-dimension/</loc>
+    
+    <lastmod>2018-09-22T14:16:12.352Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.seventech.top/2018/05/26/back-propagation-2/</loc>
+    
+    <lastmod>2018-09-22T14:16:04.406Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.seventech.top/2018/04/20/back-propagation-1/</loc>
+    
+    <lastmod>2018-09-22T14:15:56.277Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.seventech.top/2018/08/09/numpy-sum/</loc>
+    
+    <lastmod>2018-08-09T09:10:03.734Z</lastmod>
     
   </url>
   

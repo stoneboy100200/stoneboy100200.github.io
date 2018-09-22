@@ -1,0 +1,348 @@
+<!DOCTYPE html><html class="theme-next muse use-motion" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><script src="/lib/pace/pace.min.js?v=1.0.2"></script><link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css"><link rel="icon" type="image/png" sizes="32x32" href="/images/seven.jpg?v=5.1.4"><meta name="keywords" content="CNN,"><link rel="alternate" href="/atom.xml" title="Seven's Blog" type="application/atom+xml"><meta name="description" content="如何让多层神经网络学习呢？我们已了解了使用梯度下降来更新权重，反向传播算法则是它的一个延伸。要使用梯度下降法更新隐藏层的权重，你需要知道各隐藏层节点的误差对最终输出的影响。每层的输出是由两层间的权重决定的，两层之间产生的误差，按权重缩放后在网络中向前传播。既然我们知道输出误差，便可以用权重来反向传播到隐藏层。"><meta name="keywords" content="CNN"><meta property="og:type" content="article"><meta property="og:title" content="反向传播（二）"><meta property="og:url" content="https://www.seventech.top/2018/05/26/back-propagation-2/index.html"><meta property="og:site_name" content="Seven&#39;s Blog"><meta property="og:description" content="如何让多层神经网络学习呢？我们已了解了使用梯度下降来更新权重，反向传播算法则是它的一个延伸。要使用梯度下降法更新隐藏层的权重，你需要知道各隐藏层节点的误差对最终输出的影响。每层的输出是由两层间的权重决定的，两层之间产生的误差，按权重缩放后在网络中向前传播。既然我们知道输出误差，便可以用权重来反向传播到隐藏层。"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="https://www.seventech.top/2018/05/26/back-propagation-2/manuscript.jpg"><meta property="og:image" content="https://www.seventech.top/2018/05/26/back-propagation-2/cnn_network.png"><meta property="og:image" content="https://www.seventech.top/2018/05/26/back-propagation-2/sum_nodes.png"><meta property="og:updated_time" content="2018-09-22T14:16:04.406Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="反向传播（二）"><meta name="twitter:description" content="如何让多层神经网络学习呢？我们已了解了使用梯度下降来更新权重，反向传播算法则是它的一个延伸。要使用梯度下降法更新隐藏层的权重，你需要知道各隐藏层节点的误差对最终输出的影响。每层的输出是由两层间的权重决定的，两层之间产生的误差，按权重缩放后在网络中向前传播。既然我们知道输出误差，便可以用权重来反向传播到隐藏层。"><meta name="twitter:image" content="https://www.seventech.top/2018/05/26/back-propagation-2/manuscript.jpg"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Muse",version:"5.1.4",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!0,onmobile:!1},fancybox:!0,tabs:!0,motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://www.seventech.top/2018/05/26/back-propagation-2/"><title>反向传播（二） | Seven's Blog</title><script type="text/javascript">var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?1b109916631eeeb026dba5af682d17af";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div> <a href="https://github.com/stoneboy100200" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513;color:#fff;position:absolute;top:0;border:0;left:0;transform:scale(-1,1)" aria-hidden="true"><path d="M0 0 115 115 130 115 142 142 250 250 250 0Z"></path><path d="M128.3 109C113.8 99.7 119 89.6 119 89.6 122 82.7 120.5 78.6 120.5 78.6 119.2 72 123.4 76.3 123.4 76.3 127.3 80.9 125.5 87.3 125.5 87.3 122.9 97.6 130.6 101.9 134.4 103.2" fill="currentColor" style="transform-origin:130px 106px" class="octo-arm"></path><path d="M115 115C114.9 115.1 118.7 116.5 119.8 115.4L133.7 101.6C136.9 99.2 139.9 98.4 142.2 98.6 133.8 88 127.5 74.4 143.8 58 148.5 53.4 154 51.2 159.7 51 160.3 49.4 163.2 43.6 171.4 40.1 171.4 40.1 176.1 42.5 178.8 56.2 183.1 58.6 187.2 61.8 190.9 65.4 194.5 69 197.7 73.2 200.1 77.6 213.8 80.2 216.3 84.9 216.3 84.9 212.7 93.1 206.9 96 205.4 96.6 205.1 102.4 203 107.8 198.3 112.5 181.9 128.9 168.3 122.5 157.7 114.1 157.9 116.9 156.7 120.9 152.7 124.9L141 136.5C139.8 137.7 141.6 141.9 141.8 141.8Z" fill="currentColor" class="octo-body"></path></svg><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style></a><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Seven's Blog</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle">Stay Hungry. Stay Foolish.</p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="https://www.seventech.top/2018/05/26/back-propagation-2/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Seven"><meta itemprop="description" content=""><meta itemprop="image" content="/images/peppa.jpg"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Seven's Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">反向传播（二）</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-26T10:27:02+08:00">2018-05-26</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i></span><a href="/2018/05/26/back-propagation-2/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2018/05/26/back-propagation-2/" itemprop="commentCount"></span></a></span> <span id="/2018/05/26/back-propagation-2/" class="leancloud_visitors" data-flag-title="反向传播（二）"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">热度&#58;</span><span class="leancloud-visitors-count"></span> <span>℃</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">字数统计&#58;</span> <span title="字数统计">1,377 字</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">6 分钟</span></div></div></header><div class="post-body" itemprop="articleBody"><p>如何让多层神经网络学习呢？我们已了解了使用梯度下降来更新权重，反向传播算法则是它的一个延伸。要使用梯度下降法更新隐藏层的权重，你需要知道各隐藏层节点的误差对最终输出的影响。每层的输出是由两层间的权重决定的，两层之间产生的误差，按权重缩放后在网络中向前传播。既然我们知道输出误差，便可以用权重来反向传播到隐藏层。<br><a id="more"></a><br>我们已经知道一个权重的更新可以这样计算：</p><script type="math/tex;mode=display">\Delta w_{i} = \eta\delta_j x_i</script><p>这里 $\delta$(error term) 是指：</p><script type="math/tex;mode=display">\delta_j = (y_j-\hat{y_j})f^\prime(h_j) = (y_j-\hat{y_j})f^\prime_j(\sum_{}w_ix_i)</script><p>上面公式中 $(y_j-\hat{y_j})$ 是输出误差，激活函数 $f(h_j)$ 的导函是 $f^\prime(h_j)$ ，我们把这个导函数称做输出的梯度。</p><p>网上反向传播的版本很多，看千百个版本不如自己手推一个版本。<br><img src="/2018/05/26/back-propagation-2/manuscript.jpg" alt="manuscript"></p><h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><ul><li>层 - 用带括号的字母L表示层，(L)表示第L层，(L-1)表示第L-1层，也就是L层的上一层，(L+1)表示第L+1层，也就是L层的下一层。</li><li>下标 - 用 i ，j ， k ，分别表示第 L-1 层的任意节点，第 L 层的任意节点，以及第 L+1 层的任意节点。</li><li>$a^{(L)}_i$ - 表示节点 i 在第 L 层的输出。</li><li>$w^{(L)}_{ij}$ - 表示在节点 i 和节点 j之间的权重，它代表第 L 层的权重。</li><li>$o^{(L)}_i$ - 表示节点 i 在第 L 层的输出。</li><li>$r^{(L)}$ - 表示第 L 层的节点数量</li><li>$b^{(L)}_{i}$ - 表示节点 i 在第 L 层的偏差</li><li>$\sigma()$ - 表示激活函数 sigmoid<br><img src="/2018/05/26/back-propagation-2/cnn_network.png" alt="cnn_network"></li></ul><h1 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h1><p>本文的的激活函数不再用 f(x) 表示，而用 sigmoid 函数作为激活函数，表示为 $\sigma()$。</p><p>为了进一步简化，对于节点 j 在第 L 层 的偏差 $b^{(L)}_{j}$ 将被合并到权重中，表示为 $w^{(L)}_{0j}$：</p><script type="math/tex;mode=display">w^{(L)}_{0j} = b^{(L)}_j</script><p>那么节点 j 的输出：</p><script type="math/tex;mode=display">a^{(L)}_j = b^{(L)}_j + \sum^{r^{(L-1)}}_{i=1} w^{(L)}_{ij}o^{(L-1)}_i = \sum^{r^{(L-1)}}_{i=0} w^{(L)}_{ij}o^{(L-1)}_i</script><h1 id="误差函数"><a href="#误差函数" class="headerlink" title="误差函数"></a>误差函数</h1><p>我们依然用 SSE 作为衡量预测结果的标准：</p><script type="math/tex;mode=display">E = \frac{1}{2}(y - \hat{y})^2</script><h1 id="误差偏导"><a href="#误差偏导" class="headerlink" title="误差偏导"></a>误差偏导</h1><p>反向传播算法的推导通过将链式法则应用于误差函数偏导开始：</p><script type="math/tex;mode=display">\frac{\alpha E}{\alpha w^{(L)}_{ij}} = \frac{\alpha E}{\alpha a^{(L)}_{j}}\frac{\alpha a^{(L)}_j}{\alpha w^{(L)}_{ij}}</script><p>误差项依然用 $\delta$ 表示，不同的是带了上下标，表示节点 j 在第 L 层的误差项：</p><script type="math/tex;mode=display">\delta^{(L)}_j =\frac{\alpha E}{\alpha a^{(L)}_{j}}</script><p>而</p><script type="math/tex;mode=display">a^{(L)}_j = \sum^{r^{(L-1)}}_{i=0}w^{(L)}_{ij}o^{(L-1)}_i</script><p>$o^{(L-1)}_i$ 表示节点 i 在第 L-1 层的输出，求偏导可知：</p><script type="math/tex;mode=display">\frac{\alpha a^{(L)}_j}{\alpha w^{(L)}_{ij}} = o^{(L-1)}_i</script><p>因此</p><script type="math/tex;mode=display">\frac{\alpha E}{\alpha w^{(L)}_{ij}} = \delta^{(L)}_jo^{(L-1)}_i</script><h1 id="输出层"><a href="#输出层" class="headerlink" title="输出层"></a>输出层</h1><p>这里我们假设输出层只有一个节点，因此节点的下标是1而不是 k ，那么最后一层的输出表示为$a^{(L+1)}_1$，由误差函数可知：</p><script type="math/tex;mode=display">E = \frac{1}{2}(y - \hat{y})^2 = \frac{1}{2}(y-\sigma(a^{(L+1)}_1))^2</script><p>$\sigma()$ 是激活函数 sigmoid 函数。同样令输出层的误差项为 $\delta^{(L+1)}_1 = \frac{\alpha E}{\alpha a^{(L+1)}_{1}}$，所以</p><script type="math/tex;mode=display">\delta^{(L+1)}_1 = \frac{\alpha E}{\alpha a^{(L+1)}_{1}} =  -(y-\sigma(a^{(L+1)}_1))\sigma^\prime(a^{(L+1)}_1) = -(y-\hat{y})\sigma^\prime(a^{(L+1)}_1)</script><h1 id="隐藏层"><a href="#隐藏层" class="headerlink" title="隐藏层"></a>隐藏层</h1><p>对于隐藏层节点 j 的误差项：</p><script type="math/tex;mode=display">\delta^{(L)}_j = \frac{\alpha E}{\alpha a^{(L)}_{j}} = \sum^{r^{(L+1)}}_{k=1}\frac{\alpha E}{\alpha a^{(L+1)}_{k}}\frac{\alpha a^{(L+1)}_k}{\alpha a^{(L)}_j}</script><p>上式公式中为什么要求和？请看下图：<br><img src="/2018/05/26/back-propagation-2/sum_nodes.png" alt="sum_nodes"><br>因为激活值可以通过不同的途径影响代价函数(误差函数)，也就是说神经元一边通过 $a^{(L+1)}_1$ 来影响代价函数，另一边通过 $a^{(L+1)}_2$ 来影响代价函数，得把这些都加起来。至于求和公式中 k 是从1开始的，因为输出层没有偏差，只有输出节点，而从0开始表示该层包含一个偏差的节点。</p><p>令 $\delta^{(L+1)}_k = \frac{\alpha E}{\alpha a^{(L+1)}_{k}}$ ，所以</p><script type="math/tex;mode=display">\delta^{(L)}_j = \sum^{r^{(L+1)}}_{k=1}\delta^{(L+1)}_k\frac{\alpha a^{(L+1)}_k}{\alpha a^{(L)}_j}</script><p>由于</p><script type="math/tex;mode=display">a^{(L+1)}_k = \sum^{r^{(L)}}_{j=0}w^{(L+1)}_{jk}\sigma(a^{(L)}_j)</script><p>所以</p><script type="math/tex;mode=display">\frac{\alpha a^{(L+1)}_k}{\alpha a^{(L)}_j} = w^{(L+1)}_{jk}\sigma^\prime(a^{(L)}_j)</script><p>因此</p><script type="math/tex;mode=display">\delta^{(L)}_j = \sum^{r^{(L+1)}}_{k=1}\delta^{(L+1)}_kw^{(L+1)}_{jk}\sigma^\prime(a^{(L)}_j) = \sigma^\prime(a^{(L)}_j)\sum^{r^{(L+1)}}_{k=1}w^{(L+1)}_{jk}\delta^{(L+1)}_k</script><p>最后带入公式</p><script type="math/tex;mode=display">\frac{\alpha E}{\alpha w^{(L)}_{ij}} = \delta^{(L)}_jo^{(L-1)}_i = \sigma^\prime(a^{(L)}_j)o^{(L-1)}_i\sum^{r^{(L+1)}}_{k=1}w^{(L+1)}_{jk}\delta^{(L+1)}_k</script><p>至此，反向传播推导就结束了。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>上面推导出了很多公式，总结一下对我们有用的公式：</p><ul><li><code>误差函数对权重的偏导，可以理解为代价函数（误差）对权重 w 的微小变化有多敏感</code><br><strong><script type="math/tex">\frac{\alpha E}{\alpha w^{(L)}_{ij}} = \delta^{(L)}_jo^{(L-1)}_i</script></strong></li><li><code>输出层的误差项</code><br><strong><script type="math/tex">\delta^{(L+1)}_1 =  -(y-\hat{y})\sigma^\prime(a^{(L+1)}_1)</script></strong></li><li><code>隐藏层误差项</code><br><strong><script type="math/tex">\delta^{(L)}_j = \sigma^\prime(a^{(L)}_j)\sum^{r^{(L+1)}}_{k=1}w^{(L+1)}_{jk}\delta^{(L+1)}_k</script></strong></li></ul><h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">from data_prep import features, targets, features_test, targets_test</span><br><span class="line"></span><br><span class="line">np.random.seed(21)</span><br><span class="line"></span><br><span class="line">def sigmoid(x):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Calculate sigmoid</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    return 1 / (1 + np.exp(-x))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 超参数</span><br><span class="line">n_hidden = 2  # number of hidden units</span><br><span class="line">epochs = 900</span><br><span class="line">learnrate = 0.005</span><br><span class="line"></span><br><span class="line">n_records, n_features = features.shape</span><br><span class="line">last_loss = None</span><br><span class="line"># 初始化权重</span><br><span class="line">weights_input_hidden = np.random.normal(scale=1 / n_features ** .5,</span><br><span class="line">                                        size=(n_features, n_hidden))</span><br><span class="line">weights_hidden_output = np.random.normal(scale=1 / n_features ** .5,</span><br><span class="line">                                         size=n_hidden)</span><br><span class="line">print(&apos;weights_input_hidden=&#123;&#125;&apos;.format(weights_input_hidden))</span><br><span class="line">print(&apos;weights_hidden_output=&#123;&#125;&apos;.format(weights_hidden_output))</span><br><span class="line">for e in range(epochs):</span><br><span class="line">    del_w_input_hidden = np.zeros(weights_input_hidden.shape)</span><br><span class="line">    del_w_hidden_output = np.zeros(weights_hidden_output.shape)</span><br><span class="line"></span><br><span class="line">    for x, y in zip(features.values, targets):</span><br><span class="line">        ## 前向传播 ##</span><br><span class="line">        # TODO: 计算输出</span><br><span class="line">        #print(&apos;x=&#123;&#125;&apos;.format(x))</span><br><span class="line">        hidden_input = np.dot(x, weights_input_hidden)</span><br><span class="line">        hidden_output = sigmoid(hidden_input)</span><br><span class="line">        output = sigmoid(np.dot(hidden_output, weights_hidden_output))</span><br><span class="line"></span><br><span class="line">        ## 后向传播 ##</span><br><span class="line">        # TODO: 实际值与期望的差值</span><br><span class="line">        error = y - output</span><br><span class="line"></span><br><span class="line">        # TODO: 对输出求误差梯度</span><br><span class="line">        output_error_term = error * output * (1-output)</span><br><span class="line"></span><br><span class="line">        ## 传播误差到隐藏层</span><br><span class="line"></span><br><span class="line">        # TODO: 计算隐藏层对误差的贡献</span><br><span class="line">        hidden_error = np.dot(weights_hidden_output, output_error_term)</span><br><span class="line"></span><br><span class="line">        # TODO: 对隐藏层求误差梯度</span><br><span class="line">        hidden_error_term = hidden_error * hidden_output * (1-hidden_output)</span><br><span class="line"></span><br><span class="line">        # TODO: 更新权重的变化率</span><br><span class="line">        del_w_hidden_output += output_error_term * hidden_output</span><br><span class="line">        del_w_input_hidden += hidden_error_term * x[:, None]</span><br><span class="line"></span><br><span class="line">    # TODO: 更新权重</span><br><span class="line">    weights_input_hidden += learnrate * del_w_input_hidden / n_records</span><br><span class="line">    weights_hidden_output += learnrate * del_w_hidden_output / n_records</span><br><span class="line"></span><br><span class="line">    # 打印训练集上的均方差</span><br><span class="line">    if e % (epochs / 10) == 0:</span><br><span class="line">        hidden_output = sigmoid(np.dot(x, weights_input_hidden))</span><br><span class="line">        out = sigmoid(np.dot(hidden_output,</span><br><span class="line">                             weights_hidden_output))</span><br><span class="line">        loss = np.mean((out - targets) ** 2)</span><br><span class="line"></span><br><span class="line">        if last_loss and last_loss &lt; loss:</span><br><span class="line">            print(&quot;Train loss: &quot;, loss, &quot;  WARNING - Loss Increasing&quot;)</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;Train loss: &quot;, loss)</span><br><span class="line">        last_loss = loss</span><br><span class="line"></span><br><span class="line"># 对测试数据计算准确度</span><br><span class="line">hidden = sigmoid(np.dot(features_test, weights_input_hidden))</span><br><span class="line">out = sigmoid(np.dot(hidden, weights_hidden_output))</span><br><span class="line">predictions = out &gt; 0.5</span><br><span class="line">accuracy = np.mean(predictions == targets_test)</span><br><span class="line">print(&quot;Prediction accuracy: &#123;:.3f&#125;&quot;.format(accuracy))</span><br></pre></td></tr></table></figure><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul><li><a href="https://brilliant.org/wiki/backpropagation/" target="_blank" rel="noopener">Brilliant-Backpropagation</a></li><li><a href="https://www.bilibili.com/video/av16577449/?p=2" target="_blank" rel="noopener">反向传播的微积分原理</a></li></ul></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>碎银打赏，以资鼓励！</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>打赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="/images/wechatpay.png" alt="Seven 微信支付"><p>微信支付</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="/images/alipay.jpg" alt="Seven 支付宝"><p>支付宝</p></div></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> Seven</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://www.seventech.top/2018/05/26/back-propagation-2/" title="反向传播（二）">https://www.seventech.top/2018/05/26/back-propagation-2/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/CNN/" rel="tag"><i class="fa fa-tag"></i> CNN</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2018/04/20/back-propagation-1/" rel="next" title="反向传播（一）"><i class="fa fa-chevron-left"></i> 反向传播（一）</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2018/06/08/numpy-100/" rel="prev" title="100 numpy exercises">100 numpy exercises<i class="fa fa-chevron-right"></i></a></div></div></footer></div><div><div><div style="text-align:center;color:#ccc;font-size:14px">-------------本文结束<i class="fa fa-paw"></i> 感谢您的阅读-------------</div></div></div></article><div class="post-spread"><div class="bdsharebuttonbox"><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a><a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a><a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a><a href="#" class="bds_more" data-cmd="more"></a><a class="bds_count" data-cmd="count"></a></div><script>window._bd_share_config={common:{bdText:"",bdMini:"2",bdMiniList:!1,bdPic:""},share:{bdSize:"16",bdStyle:"0"},image:{viewList:["tsina","douban","sqq","qzone","weixin","twi","fbook"],viewText:"分享到：",viewSize:"16"}}</script><script>with(document)(getElementsByTagName("head")[0]||body).appendChild(createElement("script")).src="//bdimg.share.baidu.com/static/api/js/share.js?cdnversion="+~(-new Date/36e5)</script></div></div></div><div class="comments" id="comments"></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/peppa.jpg" alt="Seven"><p class="site-author-name" itemprop="name">Seven</p><p class="site-description motion-element" itemprop="description">AI Technology</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">7</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">2</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">2</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="feed-link motion-element"><a href="/atom.xml" rel="alternate"><i class="fa fa-rss"></i> RSS</a></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/stoneboy100200" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="mailto:stoneboy100200@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#前置条件"><span class="nav-number">2.</span> <span class="nav-text">前置条件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#误差函数"><span class="nav-number">3.</span> <span class="nav-text">误差函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#误差偏导"><span class="nav-number">4.</span> <span class="nav-text">误差偏导</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#输出层"><span class="nav-number">5.</span> <span class="nav-text">输出层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#隐藏层"><span class="nav-number">6.</span> <span class="nav-text">隐藏层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例子"><span class="nav-number">8.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">9.</span> <span class="nav-text">参考文献</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"> ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">Seven</span></div><div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div> <span>Hosted by <a href="https://pages.coding.me">Coding Pages</a></span><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script> <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span> <span class="post-meta-divider">|</span> <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span> <span class="post-meta-divider">|</span></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="//unpkg.com/valine/dist/Valine.min.js"></script><script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'KKqavcVvENI9CUu891zV35JW-gzGzoHsz',
+        appKey: 'QE0h2SPaJy5pRlIpIGbsBlku',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script><script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script><script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script><script>AV.initialize("KKqavcVvENI9CUu891zV35JW-gzGzoHsz","QE0h2SPaJy5pRlIpIGbsBlku")</script><script>function showTime(e){var t=new AV.Query(e),c=[],u=$(".leancloud_visitors");u.each(function(){c.push($(this).attr("id").trim())}),t.containedIn("url",c),t.find().done(function(e){var t=".leancloud-visitors-count";if(0!==e.length){for(var n=0;n<e.length;n++){var o=e[n],i=o.get("url"),s=o.get("time"),r=document.getElementById(i);$(r).find(t).text(s)}for(n=0;n<c.length;n++){i=c[n],r=document.getElementById(i);var l=$(r).find(t);""==l.text()&&l.text(0)}}else u.find(t).text(0)}).fail(function(e,t){console.log("Error: "+t.code+" "+t.message)})}function addCount(i){var e=$(".leancloud_visitors"),s=e.attr("id").trim(),r=e.attr("data-flag-title").trim(),t=new AV.Query(i);t.equalTo("url",s),t.find({success:function(e){if(0<e.length){var t=e[0];t.fetchWhenSave(!0),t.increment("time"),t.save(null,{success:function(e){$(document.getElementById(s)).find(".leancloud-visitors-count").text(e.get("time"))},error:function(e,t){console.log("Failed to save Visitor num, with error message: "+t.message)}})}else{var n=new i,o=new AV.ACL;o.setPublicReadAccess(!0),o.setPublicWriteAccess(!0),n.setACL(o),n.set("title",r),n.set("url",s),n.set("time",1),n.save(null,{success:function(e){$(document.getElementById(s)).find(".leancloud-visitors-count").text(e.get("time"))},error:function(e,t){console.log("Failed to create")}})}},error:function(e){console.log("Error:"+e.code+" "+e.message)}})}$(function(){var e=AV.Object.extend("Counter");1==$(".leancloud_visitors").length?addCount(e):1<$(".post-title-link").length&&showTime(e)})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script><script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script><script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script></body></html>
